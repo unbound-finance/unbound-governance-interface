@@ -36,16 +36,12 @@
       <div class="flex flex-col space-y-4 p-6 backgroundColor">
         <div class="flex flex-col justify-between items-center">
           <p class="font-medium dark:text-white">Transaction unsuccessful</p>
-          <code
+          <!-- <code
             v-if="error"
             class="break-all w-full bg-black text-xs text-white rounded px-3 py-1 mt-3"
           >
             {{ error.message.split('message":')[1].split('",')[0].slice(1) }}
-          </code>
-        </div>
-
-        <div>
-          <p class="dark:text-gray-200 text-sm">Please check Etherscan</p>
+          </code> -->
         </div>
       </div>
     </Modal>
@@ -124,7 +120,8 @@
               <tr>
                 <th class="font-bold px-3 pt-3 pb-3">Total Pending rewards</th>
                 <td class="text-[#444444] text-right px-3 pt-3 pb-3">
-                  {{ total || '-' }} $UNB
+                  {{ totalPendingReward.toFixed(2) || '-' }}
+                  $UNB
                 </td>
               </tr>
               <tr>
@@ -134,19 +131,16 @@
                 </td>
               </tr>
             </table>
-            <div
-              v-if="initialAmount < 0"
-              class="flex justify-between items-center"
-            >
+            <div v-if="initialAmount" class="flex justify-between items-center">
               <span class="uppercase text-gray-500 text-xs font-medium">
                 Claim initial rewards
               </span>
               <button
                 type="button"
-                class="transition delay-150 text-primary border-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
+                class="transition delay-150 text-primary border-2 border-opacity-25 border-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
                 @click="claimInitialRewards"
               >
-                Claim {{ initialAmount }} $UNB
+                Claim {{ initialAmount.toFixed(2) }} $UNB
               </button>
             </div>
             <button
@@ -212,7 +206,8 @@ export default {
       networkName: '',
       showNetworkError: '',
       pendingRewards: '0',
-      end: '',
+      totalPendingReward: 0,
+      end: 0,
       total: 0,
       initialAmount: 0,
       hash: '',
@@ -264,9 +259,10 @@ export default {
 
       const amount = await vesting.amount.toString()
       const initialAmount = await vesting.initialAmount.toString()
+      const begin = await vesting.begin.toString()
       const end = await vesting.end.toString()
       const until = Math.floor(Date.now() / 1000)
-      const begin = await vesting.begin.toString()
+
       // const cliff = await res.cliff.toString()
       // const initialAmount = await res.initialAmount.toString()
       const lastUpdate = await vesting.lastUpdate.toString()
@@ -274,9 +270,15 @@ export default {
       const denominator = (await end) - begin
       this.pendingRewards = (numerator / denominator / 1e18).toFixed(2)
 
+      const rewardsPerSecond = amount / (end - begin)
+      const diff = until - begin
+
+      this.totalPendingReward =
+        (amount - rewardsPerSecond * diff + numerator / denominator) / 1e18
+
       this.end =
         end === '0' ? '-' : dayjs.unix(end).format('MMM DD, YYYY - HH:mm')
-      this.initialAmount = initialAmount
+      this.initialAmount = initialAmount / 1e18
       this.total = amount / 1e18
 
       if (vesting.amount === 0) {
