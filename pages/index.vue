@@ -159,7 +159,7 @@
               :class="[
                 !vestingAddress || isNaN(pendingRewards) || pendingRewards <= 0
                   ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                  : 'bg-primary :hover:bg-primary-light'
+                  : 'bg-primary :hover:bg-primary-light',
               ]"
               @click="claim"
             >
@@ -196,12 +196,12 @@ import Modal from '../components/Modal.vue'
 import {
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
-  VESTING_CONTRACT_ADDRESS_MAP
+  VESTING_CONTRACT_ADDRESS_MAP,
 } from '../configs'
 
 export default {
   components: {
-    Modal
+    Modal,
   },
   data() {
     return {
@@ -218,7 +218,7 @@ export default {
       hash: '',
       error: null,
       isTransactionSuccessModalActive: false,
-      isTransactionFailedModalActive: false
+      isTransactionFailedModalActive: false,
     }
   },
   watch: {
@@ -226,8 +226,8 @@ export default {
       immediate: true,
       handler() {
         this.getPendingRewards()
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.checkForWallet()
@@ -299,6 +299,7 @@ export default {
         this.hash = res.hash
 
         this.isTransactionSuccessModalActive = true
+        await this.getPendingRewards()
       } catch (error) {
         this.isTransactionFailedModalActive = true
         this.error = error
@@ -321,6 +322,7 @@ export default {
         this.hash = res.hash
 
         this.isTransactionSuccessModalActive = true
+        await this.getPendingRewards()
       } catch (error) {
         this.isTransactionFailedModalActive = true
         console.log(error)
@@ -355,7 +357,7 @@ export default {
       } else {
         this.showNetworkError = false
       }
-    }
-  }
+    },
+  },
 }
 </script>
