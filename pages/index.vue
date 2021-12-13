@@ -299,7 +299,9 @@ export default {
         this.hash = res.hash
 
         this.isTransactionSuccessModalActive = true
-        await this.getPendingRewards()
+        res.wait(1).then(async () => {
+          await this.getPendingRewards()
+        })
       } catch (error) {
         this.isTransactionFailedModalActive = true
         this.error = error
@@ -322,7 +324,10 @@ export default {
         this.hash = res.hash
 
         this.isTransactionSuccessModalActive = true
-        await this.getPendingRewards()
+
+        res.wait(1).then(async () => {
+          await this.getPendingRewards()
+        })
       } catch (error) {
         this.isTransactionFailedModalActive = true
         console.log(error)
