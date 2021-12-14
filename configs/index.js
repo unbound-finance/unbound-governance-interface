@@ -20,3 +20,5 @@ export {
   VESTING_CONTRACT_ADDRESS,
 }
 
+export const INITIAL_START = 1639562400
+
