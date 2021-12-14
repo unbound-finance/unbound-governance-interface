@@ -61,6 +61,14 @@
 
         <!-- <div class="flex md:order-2 space-x-3 items-center">
           <button
+            v-tooltip="'Add UNB to your MetaMask wallet'"
+            style="padding: 6px 6px 6px 9px"
+            class="bg-gray-300 dark:bg-gray-700 rounded focus:outline-none"
+            @click="addTokenToWallet"
+          >
+            <img src="~/assets/images/logo.svg" alt="UNB" class="w-5 h-5" />
+          </button>
+          <button
             v-if="address"
             class="text-white focus:ring-primary bg-primary hover:!bg-primary-light font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
           >
@@ -227,7 +235,7 @@
                   isNaN(pendingRewards) ||
                   pendingRewards <= 0
                     ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                    : 'bg-primary :hover:bg-primary-light',
+                    : 'bg-primary :hover:bg-primary-light'
                 ]"
                 @click="claim"
               >
@@ -257,7 +265,7 @@
                     <img
                       src="@/assets/images/ic_info.svg"
                       width="12"
-                      title="Including cliff period."
+                      v-tooltip="'Including cliff period.'"
                     />
                   </p>
                   <p>{{ vestingCountDown }}</p>
@@ -314,11 +322,19 @@
                       <tr>
                         <th class="font-bold px-3 pt-3 pb-3">UNB Address</th>
                         <td class="text-[#444444] text-right px-3 pt-3 pb-3">
-                          {{
-                            shortenAddress(
-                              UNB_ADDRESS_MAP[SUPPORTED_NETWORK_ID]
-                            )
-                          }}
+                          <a
+                            class="dark:text-gray-200 text-sm"
+                            :href="
+                              getEtherscanLink(
+                                UNB_ADDRESS_MAP[network],
+                                'token'
+                              )
+                            "
+                            target="_blank"
+                          >
+                            {{ shortenAddress(UNB_ADDRESS_MAP[network]) }}
+                            ↗</a
+                          >
                         </td>
                       </tr>
                     </table>
@@ -352,7 +368,7 @@
                           :class="[
                             isNaN(initialAmount) || initialAmount <= 0
                               ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                              : 'bg-primary :hover:bg-primary-light',
+                              : 'bg-primary :hover:bg-primary-light'
                           ]"
                           @click="claimInitialRewards"
                         >
@@ -398,8 +414,9 @@ import {
   UNB_ADDRESS_MAP,
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
-  VESTING_CONTRACT_ADDRESS_MAP,
+  VESTING_CONTRACT_ADDRESS_MAP
 } from '../configs'
+require('@/assets/images/logo.png')
 
 function countdown(s) {
   const d = Math.floor(s / (3600 * 24))
@@ -427,7 +444,7 @@ function countdown(s) {
 
 export default {
   components: {
-    Modal,
+    Modal
   },
   data() {
     return {
@@ -452,7 +469,7 @@ export default {
       isTransactionFailedModalActive: false,
       vestingStarts: 0,
       initialStarts: 0,
-      loading: true,
+      loading: true
     }
   },
   computed: {
@@ -461,7 +478,7 @@ export default {
     },
     initialCountDown() {
       return countdown(this.initialStarts)
-    },
+    }
   },
   watch: {
     vestingAddress: {
@@ -471,8 +488,8 @@ export default {
         this.getPendingRewards().finally(() => {
           this.loading = false
         })
-      },
-    },
+      }
+    }
   },
   mounted() {
     if (this.initialTimer) clearInterval(this.initialTimer)
@@ -641,7 +658,34 @@ export default {
         this.showNetworkError = false
       }
     },
-  },
+    async addTokenToWallet() {
+      const tokenSymbol = 'UNB'
+      const tokenDecimals = 18
+      // todo change logo address
+      const tokenImage =
+        window.location.host + require('@/assets/images/logo.png')
+      // 'https://unbound-governance-interface.vercel.app/unb.svg'
+      const tokenAddress = UNB_ADDRESS_MAP[this.network]
+
+      try {
+        await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: tokenAddress, // The address that the token is at.
+              symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
+              decimals: tokenDecimals, // The number of decimals in the token
+              image: tokenImage // A string url of the token logo
+            }
+          }
+        })
+      } catch (error) {
+        alert('Failed to add token')
+        console.log(error)
+      }
+    }
+  }
 }
 </script>
 
@@ -658,5 +702,131 @@ export default {
   100% {
     transform: perspective(1000px) rotateY(0deg);
   }
+}
+
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+}
+
+.tooltip .tooltip-inner {
+  background: #333333;
+  color: white;
+  border-radius: 4px;
+  padding: 5px 10px 4px;
+  @apply text-xs;
+}
+
+.tooltip .tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: black;
+  z-index: 1;
+}
+
+.tooltip[x-placement^='top'] {
+  margin-bottom: 5px;
+}
+
+.tooltip[x-placement^='top'] .tooltip-arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.tooltip[x-placement^='bottom'] {
+  margin-top: 5px;
+}
+
+.tooltip[x-placement^='bottom'] .tooltip-arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.tooltip[x-placement^='right'] {
+  margin-left: 5px;
+}
+
+.tooltip[x-placement^='right'] .tooltip-arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip[x-placement^='left'] {
+  margin-right: 5px;
+}
+
+.tooltip[x-placement^='left'] .tooltip-arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip.popover .popover-inner {
+  background: #f9f9f9;
+  color: black;
+  padding: 24px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(black, 0.1);
+}
+
+.tooltip.popover .popover-arrow {
+  border-color: #f9f9f9;
+}
+
+.tooltip[aria-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s, visibility 0.15s;
+}
+
+.tooltip[aria-hidden='false'] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.15s;
+}
+
+.filter-black {
+  filter: invert(0%) sepia(100%) saturate(7500%) hue-rotate(127deg)
+    brightness(87%) contrast(113%);
+}
+
+.dark-mode .dark\:filter-black {
+  filter: invert(0%) sepia(100%) saturate(7500%) hue-rotate(127deg)
+    brightness(87%) contrast(113%);
+}
+.filter-white {
+  filter: invert(100%) sepia(13%) saturate(7500%) hue-rotate(204deg)
+    brightness(115%) contrast(111%);
+}
+
+.dark-mode .dark\:filter-white {
+  filter: invert(100%) sepia(13%) saturate(7500%) hue-rotate(204deg)
+    brightness(115%) contrast(111%);
 }
 </style>
