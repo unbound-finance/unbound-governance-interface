@@ -95,7 +95,7 @@
       </div>
     </nav>
     <div class="container mx-auto my-20">
-      <div v-if="initialStarts > 0" class="mx-auto w-full max-w-md">
+      <!-- <div v-if="initialStarts > 0" class="mx-auto w-full max-w-md">
         <div class="flex flex-col border px-3 rounded mb-5 py-3 bg-white">
           <p class="text-xs text-gray-400 flex items-center space-x-2">
             <span class="uppercase">Initial claim WILL BEGIN IN</span>
@@ -106,9 +106,8 @@
             {{ initialCountDown }}
           </p>
         </div>
-      </div>
+      </div> -->
       <div
-        v-else
         class="rounded-2xl mx-auto w-full max-w-md overflow-hidden shadow-lg bg-white"
       >
         <div class="p-10">
@@ -239,7 +238,7 @@
             </template>
             <template v-else>
               <div class="mx-auto w-full max-w-md">
-                <div
+                <!-- <div
                   class="flex flex-col border px-3 rounded mb-5 py-3 bg-white"
                 >
                   <p class="text-xs text-gray-400 flex items-center space-x-2">
@@ -251,7 +250,7 @@
                     />
                   </p>
                   <p>{{ vestingCountDown }}</p>
-                </div>
+                </div> -->
                 <div class="rounded overflow-hidden">
                   <div class="flex flex-col items-center justify-center">
                     <div>
@@ -270,37 +269,98 @@
                       </span>
                       <span>UNB</span>
                     </div>
-                    <span class="text-xs text-gray-400"
-                      >Claim your initial $UNB</span
+
+                    <table
+                      class="bg-gray-100 rounded-xl text-[#828282] mt-3 p-3 text-left w-full text-xs"
                     >
-                    <div class="w-full mt-6">
-                      <button
-                        v-if="address"
-                        type="button"
-                        :disabled="isNaN(initialAmount) || initialAmount <= 0"
-                        class="w-full transition delay-150 text-white font-medium rounded text-sm px-5 py-3 text-center mr-3 md:mr-0"
-                        :class="[
-                          isNaN(initialAmount) || initialAmount <= 0
-                            ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                            : 'bg-primary :hover:bg-primary-light',
-                        ]"
-                        @click="claimInitialRewards"
+                      <tr>
+                        <th class="font-bold px-3 pt-3">Total UNB</th>
+                        <td class="text-[#444444] text-right px-3 pt-3">
+                          {{ Number(total).toFixed(2) || '-' }}
+                          $UNB
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="font-bold px-3 pt-3">Total Pending UNB</th>
+                        <td class="text-[#444444] text-right px-3 pt-3">
+                          {{ totalPendingReward.toFixed(2) || '-' }}
+                          $UNB
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="font-bold px-3 pt-3">Claimed Till Now</th>
+                        <td class="text-[#444444] text-right px-3 pt-3">
+                          {{
+                            (
+                              Number(total) - Number(totalPendingReward)
+                            ).toFixed(2) || '-'
+                          }}
+                          $UNB
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="font-bold px-3 pt-3 pb-3">UNB Address</th>
+                        <td class="text-[#444444] text-right px-3 pt-3 pb-3">
+                          {{
+                            shortenAddress(
+                              UNB_ADDRESS_MAP[SUPPORTED_NETWORK_ID]
+                            )
+                          }}
+                        </td>
+                      </tr>
+                    </table>
+                    <div
+                      v-if="initialStarts > 0"
+                      class="mx-auto text-center max-w-md mt-3"
+                    >
+                      <div class="flex flex-col px-3 rounded mt-3 bg-white">
+                        <p
+                          class="text-xs text-gray-400 flex items-center space-x-2"
+                        >
+                          <span class="uppercase"
+                            >Initial claim WILL BEGIN IN</span
+                          >
+                        </p>
+                        <p
+                          class="text-2xl font-light text-gray-700 mt-2 tracking-widest font-mono"
+                        >
+                          {{ initialCountDown }}
+                        </p>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <span class="text-xs text-gray-400"
+                        >Claim your initial $UNB</span
                       >
-                        {{
-                          // eslint-disable-next-line vue/no-parsing-error
-                          isNaN(initialAmount) || initialAmount <= 0
-                            ? 'Not eligible'
-                            : 'Claim $UNB'
-                        }}
-                      </button>
-                      <button
-                        v-else
-                        type="button"
-                        class="text-white w-full focus:ring-primary bg-primary hover:!bg-primary-light font-medium rounded text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
-                        @click="connectWallet"
-                      >
-                        Connect Wallet
-                      </button>
+                      <div class="w-full mt-6">
+                        <button
+                          v-if="address"
+                          type="button"
+                          :disabled="isNaN(initialAmount) || initialAmount <= 0"
+                          class="w-full transition delay-150 text-white font-medium rounded text-sm px-5 py-3 text-center mr-3 md:mr-0"
+                          :class="[
+                            isNaN(initialAmount) || initialAmount <= 0
+                              ? 'cursor-not-allowed bg-gray-200 text-gray-400'
+                              : 'bg-primary :hover:bg-primary-light',
+                          ]"
+                          @click="claimInitialRewards"
+                        >
+                          {{
+                            // eslint-disable-next-line vue/no-parsing-error
+                            isNaN(initialAmount) || initialAmount <= 0
+                              ? 'Not eligible'
+                              : 'Claim $UNB'
+                          }}
+                        </button>
+                        <button
+                          v-else
+                          type="button"
+                          class="text-white w-full focus:ring-primary bg-primary hover:!bg-primary-light font-medium rounded text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
+                          @click="connectWallet"
+                        >
+                          Connect Wallet
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -324,6 +384,7 @@ import Modal from '../components/Modal.vue'
 import {
   INITIAL_START,
   NETWORK_NAME_MAP,
+  UNB_ADDRESS_MAP,
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
   VESTING_CONTRACT_ADDRESS_MAP,
@@ -360,6 +421,7 @@ export default {
   data() {
     return {
       NETWORK_NAME_MAP,
+      UNB_ADDRESS_MAP,
       SUPPORTED_NETWORK_ID,
       vestingCategory: Object.entries(VESTING_CONTRACT_ADDRESS_MAP),
       address: '',
@@ -422,10 +484,15 @@ export default {
     })
   },
   methods: {
-    getEtherscanLink(hash) {
+    shortenAddress(address, chars = 6) {
+      return `${address.substring(0, chars + 2)}...${address.substring(
+        42 - chars
+      )}`
+    },
+    getEtherscanLink(hash, type = 'tx') {
       return `https://${
         this.network.toString() === '1' ? '' : `${this.networkName}.`
-      }etherscan.io/tx/${hash}`
+      }etherscan.io/${type}/${hash}`
     },
     connectWallet() {
       window.ethereum.request({ method: 'eth_requestAccounts' })
