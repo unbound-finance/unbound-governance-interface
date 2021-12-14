@@ -120,7 +120,7 @@
               <tr>
                 <th class="font-bold px-3 pt-3">Total UNB</th>
                 <td class="text-[#444444] text-right px-3 pt-3">
-                  {{ Number(pendingRewards).toFixed(2) || '-' }}
+                  {{ Number(total).toFixed(2) || '-' }}
                   $UNB
                 </td>
               </tr>
