@@ -106,7 +106,7 @@
               <label
                 class="uppercase text-gray-500 text-xs font-medium mb-3 block"
               >
-                Your Claimable Rewards
+                Your Claimable UNB
               </label>
               <div class="font-bold text-3xl mb-2 text-gray-700 flex space-x-2">
                 <span>{{ isNaN(pendingRewards) ? '-' : pendingRewards }} </span>
@@ -118,14 +118,21 @@
               class="bg-gray-100 rounded-xl text-[#828282] p-3 text-left w-full text-xs"
             >
               <tr>
-                <th class="font-bold px-3 pt-3 pb-3">Total Pending rewards</th>
+                <th class="font-bold px-3 pt-3">Total UNB</th>
+                <td class="text-[#444444] text-right px-3 pt-3">
+                  {{ Number(pendingRewards).toFixed(2) || '-' }}
+                  $UNB
+                </td>
+              </tr>
+              <tr>
+                <th class="font-bold px-3 pt-3 pb-3">Total Pending UNB</th>
                 <td class="text-[#444444] text-right px-3 pt-3 pb-3">
                   {{ totalPendingReward.toFixed(2) || '-' }}
                   $UNB
                 </td>
               </tr>
               <tr>
-                <th class="font-bold px-3 pb-3">Ending On:</th>
+                <th class="font-bold px-3 pb-3">Vesting Ends On:</th>
                 <td class="text-[#444444] text-right px-3 pb-3">
                   {{ end }}
                 </td>
@@ -133,7 +140,7 @@
             </table>
             <div v-if="initialAmount" class="flex justify-between items-center">
               <span class="uppercase text-gray-500 text-xs font-medium">
-                Claim initial rewards
+                Claim initial UNB
               </span>
               <button
                 type="button"
@@ -208,6 +215,7 @@ export default {
       pendingRewards: '0',
       totalPendingReward: 0,
       end: 0,
+      cliff: 0,
       total: 0,
       initialAmount: 0,
       hash: '',
@@ -260,6 +268,7 @@ export default {
       const amount = await vesting.amount.toString()
       const initialAmount = await vesting.initialAmount.toString()
       const begin = await vesting.begin.toString()
+      // const cliff = await vesting.cliff.toString()
       const end = await vesting.end.toString()
       const until = Math.floor(Date.now() / 1000)
 
