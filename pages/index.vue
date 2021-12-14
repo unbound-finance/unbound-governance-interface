@@ -112,7 +112,7 @@
       >
         <div class="p-10">
           <div class="space-y-6">
-            <div>
+            <!-- <div>
               <label
                 for="vestingCategory"
                 class="uppercase text-gray-500 text-xs font-medium mb-3 block"
@@ -133,7 +133,7 @@
                   :innerHtml.prop="name"
                 ></option>
               </select>
-            </div>
+            </div> -->
             <div v-if="loading">loading...</div>
 
             <template v-else-if="vestingStarts <= 0">
@@ -259,7 +259,7 @@
                         class="animate-coin w-24 h-24 object-contain my-6"
                       />
                     </div>
-                    <div
+                    <!-- <div
                       class="font-bold text-3xl mb-2 text-gray-700 flex space-x-2"
                     >
                       <span
@@ -268,9 +268,9 @@
                         }}
                       </span>
                       <span>UNB</span>
-                    </div>
+                    </div> -->
 
-                    <table
+                    <!-- <table
                       class="bg-gray-100 rounded-xl text-[#828282] mt-3 p-3 text-left w-full text-xs"
                     >
                       <tr>
@@ -308,16 +308,18 @@
                           }}
                         </td>
                       </tr>
-                    </table>
+                    </table> -->
                     <div
                       v-if="initialStarts > 0"
                       class="mx-auto text-center max-w-md mt-3"
                     >
-                      <div class="flex flex-col px-3 rounded mt-3 bg-white">
+                      <div
+                        class="flex flex-col justify-center px-3 rounded mt-3 bg-white"
+                      >
                         <p
                           class="text-xs text-gray-400 flex items-center space-x-2"
                         >
-                          <span class="uppercase"
+                          <span class="uppercase text-center"
                             >Initial claim WILL BEGIN IN</span
                           >
                         </p>
@@ -501,7 +503,7 @@ export default {
       const provider = new providers.Web3Provider(window.ethereum, 'any')
       const signer = provider.getSigner()
 
-      const vestingContract = await new Contract(
+      const vestingContract = new Contract(
         this.vestingAddress,
         UnboundTokenVestingABI,
         signer
