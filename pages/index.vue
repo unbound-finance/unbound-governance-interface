@@ -9,7 +9,8 @@
 
         <div>
           <p class="dark:text-gray-200 text-sm">
-            Please connect your wallet to Rinkeby Network
+            Please connect your wallet to
+            {{ NETWORK_NAME_MAP[SUPPORTED_NETWORK_ID] }} Network
           </p>
         </div>
       </div>
@@ -164,9 +165,19 @@
                   </td>
                 </tr>
                 <tr>
-                  <th class="font-bold px-3 pt-3 pb-3">Total Pending UNB</th>
-                  <td class="text-[#444444] text-right px-3 pt-3 pb-3">
+                  <th class="font-bold px-3 pt-3">Total Pending UNB</th>
+                  <td class="text-[#444444] text-right px-3 pt-3">
                     {{ totalPendingReward.toFixed(2) || '-' }}
+                    $UNB
+                  </td>
+                </tr>
+                <tr>
+                  <th class="font-bold px-3 pt-3 pb-3">Claimed Till Now</th>
+                  <td class="text-[#444444] text-right px-3 pt-3 pb-3">
+                    {{
+                      (Number(total) - Number(totalPendingReward)).toFixed(2) ||
+                      '-'
+                    }}
                     $UNB
                   </td>
                 </tr>
@@ -182,7 +193,7 @@
                 class="flex justify-between items-center"
               >
                 <span class="uppercase text-gray-500 text-xs font-medium">
-                  Claim initial UNB
+                  Claim initial $UNB
                 </span>
                 <button
                   type="button"
@@ -206,7 +217,7 @@
                   isNaN(pendingRewards) ||
                   pendingRewards <= 0
                     ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                    : 'bg-primary :hover:bg-primary-light'
+                    : 'bg-primary :hover:bg-primary-light',
                 ]"
                 @click="claim"
               >
@@ -253,7 +264,9 @@
                       class="font-bold text-3xl mb-2 text-gray-700 flex space-x-2"
                     >
                       <span
-                        >{{ isNaN(initialAmount) ? '-' : initialAmount }}
+                        >{{
+                          isNaN(initialAmount) ? '-' : initialAmount.toFixed(2)
+                        }}
                       </span>
                       <span>UNB</span>
                     </div>
@@ -269,7 +282,7 @@
                         :class="[
                           isNaN(initialAmount) || initialAmount <= 0
                             ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                            : 'bg-primary :hover:bg-primary-light'
+                            : 'bg-primary :hover:bg-primary-light',
                         ]"
                         @click="claimInitialRewards"
                       >
@@ -310,9 +323,10 @@ import Modal from '../components/Modal.vue'
 // configs
 import {
   INITIAL_START,
+  NETWORK_NAME_MAP,
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
-  VESTING_CONTRACT_ADDRESS_MAP
+  VESTING_CONTRACT_ADDRESS_MAP,
 } from '../configs'
 
 function countdown(s) {
@@ -341,10 +355,12 @@ function countdown(s) {
 
 export default {
   components: {
-    Modal
+    Modal,
   },
   data() {
     return {
+      NETWORK_NAME_MAP,
+      SUPPORTED_NETWORK_ID,
       vestingCategory: Object.entries(VESTING_CONTRACT_ADDRESS_MAP),
       address: '',
       vestingAddress: VESTING_CONTRACT_ADDRESS_MAP.Strategic,
@@ -363,7 +379,7 @@ export default {
       isTransactionFailedModalActive: false,
       vestingStarts: 0,
       initialStarts: 0,
-      loading: true
+      loading: true,
     }
   },
   computed: {
@@ -372,7 +388,7 @@ export default {
     },
     initialCountDown() {
       return countdown(this.initialStarts)
-    }
+    },
   },
   watch: {
     vestingAddress: {
@@ -382,8 +398,8 @@ export default {
         this.getPendingRewards().finally(() => {
           this.loading = false
         })
-      }
-    }
+      },
+    },
   },
   mounted() {
     if (this.initialTimer) clearInterval(this.initialTimer)
@@ -458,7 +474,7 @@ export default {
       this.startTimers()
     },
     startTimers() {
-      this.vestingStarts = +this.cliff + +this.begin
+      this.vestingStarts = +this.cliff - Math.floor(Date.now() / 1000)
       if (this.vestingTimer) clearInterval(this.vestingTimer)
 
       this.vestingTimer = setInterval(() => {
@@ -546,8 +562,8 @@ export default {
       } else {
         this.showNetworkError = false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
