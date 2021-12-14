@@ -112,7 +112,7 @@
       >
         <div class="p-10">
           <div class="space-y-6">
-            <!-- <div>
+            <div v-if="initialStarts <= 0">
               <label
                 for="vestingCategory"
                 class="uppercase text-gray-500 text-xs font-medium mb-3 block"
@@ -133,7 +133,7 @@
                   :innerHtml.prop="name"
                 ></option>
               </select>
-            </div> -->
+            </div>
             <div v-if="loading">loading...</div>
 
             <template v-else-if="vestingStarts <= 0">
@@ -259,7 +259,8 @@
                         class="animate-coin w-24 h-24 object-contain my-6"
                       />
                     </div>
-                    <!-- <div
+                    <div
+                      v-if="initialStarts <= 0"
                       class="font-bold text-3xl mb-2 text-gray-700 flex space-x-2"
                     >
                       <span
@@ -268,9 +269,10 @@
                         }}
                       </span>
                       <span>UNB</span>
-                    </div> -->
+                    </div>
 
-                    <!-- <table
+                    <table
+                      v-if="initialStarts <= 0"
                       class="bg-gray-100 rounded-xl text-[#828282] mt-3 p-3 text-left w-full text-xs"
                     >
                       <tr>
@@ -308,18 +310,14 @@
                           }}
                         </td>
                       </tr>
-                    </table> -->
-                    <div
-                      v-if="initialStarts > 0"
-                      class="mx-auto text-center max-w-md mt-3"
-                    >
-                      <div
-                        class="flex flex-col justify-center px-3 rounded mt-3 bg-white"
-                      >
+                    </table>
+
+                    <div v-if="initialStarts > 0" class="mx-auto max-w-md mt-3">
+                      <div class="flex flex-col px-3 rounded mt-3 bg-white">
                         <p
                           class="text-xs text-gray-400 flex items-center space-x-2"
                         >
-                          <span class="uppercase text-center"
+                          <span class="uppercase"
                             >Initial claim WILL BEGIN IN</span
                           >
                         </p>
@@ -330,11 +328,11 @@
                         </p>
                       </div>
                     </div>
-                    <div v-else>
-                      <span class="text-xs text-gray-400"
+                    <div v-else class="w-full mt-6">
+                      <span class="text-xs text-center text-gray-400"
                         >Claim your initial $UNB</span
                       >
-                      <div class="w-full mt-6">
+                      <div class="w-full mt-2">
                         <button
                           v-if="address"
                           type="button"
