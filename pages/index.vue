@@ -60,23 +60,6 @@
         </a>
 
         <div class="flex md:order-2 space-x-3 items-center">
-          <!-- <div>
-            <select
-              v-if="initialStarts || vestingStarts"
-              id="vestingCategory"
-              v-model="vestingAddress"
-              :disabled="loading"
-              class="border-2 px-3 text-sm text-gray-500 py-1 w-full rounded-lg outline-none focus:border-primary"
-            >
-              <option
-                v-for="([name, vAddress], i) in vestingCategory"
-                :key="name"
-                :selected="i == 0"
-                :value="vAddress"
-                :innerHtml.prop="name"
-              ></option>
-            </select>
-          </div> -->
           <button
             v-if="address"
             class="text-white focus:ring-primary bg-primary hover:!bg-primary-light font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
@@ -95,19 +78,47 @@
       </div>
     </nav>
     <div class="container mx-auto my-20">
-      <!-- <div v-if="initialStarts > 0" class="mx-auto w-full max-w-md">
-        <div class="flex flex-col border px-3 rounded mb-5 py-3 bg-white">
-          <p class="text-xs text-gray-400 flex items-center space-x-2">
-            <span class="uppercase">Initial claim WILL BEGIN IN</span>
-          </p>
-          <p
-            class="text-2xl font-light text-gray-700 mt-2 tracking-widest font-mono"
-          >
-            {{ initialCountDown }}
-          </p>
-        </div>
-      </div> -->
       <div
+        class="rounded-2xl mx-auto w-full max-w-md overflow-hidden shadow-lg bg-white"
+      >
+        <div class="p-10">
+          <div class="space-y-6">
+            <template>
+              <div class="mx-auto w-full max-w-md">
+                <div class="rounded overflow-hidden">
+                  <div class="flex flex-col items-center justify-center">
+                    <div>
+                      <img
+                        src="~/assets/images/logo.svg"
+                        class="animate-coin w-24 h-24 object-contain my-6"
+                      />
+                    </div>
+
+                    <div class="mx-auto max-w-md mt-3">
+                      <div class="flex flex-col px-3 rounded mt-3 bg-white">
+                        <p
+                          class="text-xs text-gray-400 flex items-center space-x-2"
+                        >
+                          <span class="uppercase"
+                            >Initial claim WILL BEGIN IN</span
+                          >
+                        </p>
+                        <p
+                          class="text-2xl font-light text-gray-700 mt-2 tracking-widest font-mono"
+                        >
+                          {{ initialCountDown }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div
         class="rounded-2xl mx-auto w-full max-w-md overflow-hidden shadow-lg bg-white"
       >
         <div class="p-10">
@@ -238,7 +249,7 @@
             </template>
             <template v-else>
               <div class="mx-auto w-full max-w-md">
-                <!-- <div
+                <div
                   class="flex flex-col border px-3 rounded mb-5 py-3 bg-white"
                 >
                   <p class="text-xs text-gray-400 flex items-center space-x-2">
@@ -250,7 +261,7 @@
                     />
                   </p>
                   <p>{{ vestingCountDown }}</p>
-                </div> -->
+                </div>
                 <div class="rounded overflow-hidden">
                   <div class="flex flex-col items-center justify-center">
                     <div>
@@ -368,7 +379,9 @@
             </template>
           </div>
         </div>
-      </div>
+      </div> -->
+
+
     </div>
   </section>
 </template>
