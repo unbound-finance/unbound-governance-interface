@@ -259,13 +259,13 @@
                       v-if="initialStarts <= 0"
                       class="bg-gray-100 rounded-xl text-[#828282] mt-3 p-3 text-left w-full text-xs"
                     >
-                      <tr>
+                      <!-- <tr>
                         <th class="font-bold px-3 pt-3">Total UNB</th>
                         <td class="text-[#444444] text-right px-3 pt-3">
                           {{ Number(total).toFixed(2) || '-' }}
                           $UNB
                         </td>
-                      </tr>
+                      </tr> -->
                       <tr>
                         <th class="font-bold px-3 pt-3">Total Pending UNB</th>
                         <td class="text-[#444444] text-right px-3 pt-3">
@@ -273,7 +273,7 @@
                           $UNB
                         </td>
                       </tr>
-                      <tr>
+                      <!-- <tr>
                         <th class="font-bold px-3 pt-3">Claimed Till Now</th>
                         <td class="text-[#444444] text-right px-3 pt-3">
                           {{
@@ -283,7 +283,7 @@
                           }}
                           $UNB
                         </td>
-                      </tr>
+                      </tr> -->
                       <tr>
                         <th class="font-bold px-3 pt-3 pb-3">UNB Address</th>
                         <td class="text-[#444444] text-right px-3 pt-3 pb-3">
