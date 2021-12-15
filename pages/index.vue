@@ -375,7 +375,7 @@
                     />
                   </div>
 
-                  <div class="mx-auto max-w-md mt-3">
+                  <div class="w-full mt-3">
                     <div class="flex flex-col px-3 rounded mt-3 bg-white">
                       <template v-if="initialStarts > 0">
                         <p
@@ -399,6 +399,11 @@
                       >
                         Connect Wallet
                       </button>
+                      <div
+                        class="bg-red-50 text-red-600 px-3 text-center py-2 rounded text-xs w-full"
+                      >
+                        <p>Your address is not whitelisted</p>
+                      </div>
                     </div>
                   </div>
                 </div>
