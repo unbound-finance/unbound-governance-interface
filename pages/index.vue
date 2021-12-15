@@ -33,6 +33,7 @@
         </div>
       </div>
     </Modal>
+
     <Modal v-model="isTransactionFailedModalActive">
       <div class="flex flex-col space-y-4 p-6 backgroundColor">
         <div class="flex flex-col justify-between items-center">
@@ -46,6 +47,7 @@
         </div>
       </div>
     </Modal>
+
     <!-- Navbar -->
     <nav
       class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800"
@@ -86,6 +88,7 @@
         </div>
       </div>
     </nav>
+
     <!-- main -->
     <main class="container mx-auto my-20">
       <div
@@ -195,7 +198,7 @@
                   isNaN(pendingRewards) ||
                   pendingRewards <= 0
                     ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                    : 'bg-primary :hover:bg-primary-light',
+                    : 'bg-primary :hover:bg-primary-light'
                 ]"
                 @click="claim"
               >
@@ -290,11 +293,21 @@
                                 'token'
                               )
                             "
+                            :title="UNB_ADDRESS_MAP[network]"
                             target="_blank"
                           >
                             {{ shortenAddress(UNB_ADDRESS_MAP[network]) }}
-                            ↗</a
+                            ↗
+                          </a>
+                          <a
+                            v-clipboard="UNB_ADDRESS_MAP[network]"
+                            v-clipboard:success="() => alert('Copied')"
+                            v-clipboard:error="() => alert('Failed to copy')"
+                            v-tooltip="'Copy to clipboard'"
+                            class="h-4 w-4 cursor-pointer hover:bg-gray-100 rounded-sm text-xs"
                           >
+                            &#128203;
+                          </a>
                         </td>
                       </tr>
                     </table>
@@ -328,7 +341,7 @@
                           :class="[
                             isNaN(initialAmount) || initialAmount <= 0
                               ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                              : 'bg-primary :hover:bg-primary-light',
+                              : 'bg-primary :hover:bg-primary-light'
                           ]"
                           @click="claimInitialRewards"
                         >
@@ -426,7 +439,7 @@ import {
   UNB_ADDRESS_MAP,
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
-  VESTING_CONTRACT_ADDRESS_MAP,
+  VESTING_CONTRACT_ADDRESS_MAP
 } from '~/configs'
 import LOGO from '~/configs/logo'
 // configs
@@ -458,7 +471,7 @@ function countdown(s) {
 
 export default {
   components: {
-    Modal,
+    Modal
   },
   data() {
     return {
@@ -483,7 +496,7 @@ export default {
       isTransactionFailedModalActive: false,
       vestingStarts: 0,
       initialStarts: 0,
-      loading: true,
+      loading: true
     }
   },
   computed: {
@@ -499,7 +512,7 @@ export default {
         return (claimed + +this.total * 0.1).toFixed(2)
       }
       return claimed.toFixed(2)
-    },
+    }
   },
   watch: {
     vestingAddress: {
@@ -509,8 +522,8 @@ export default {
         this.getPendingRewards().finally(() => {
           this.loading = false
         })
-      },
-    },
+      }
+    }
   },
   mounted() {
     if (this.initialTimer) clearInterval(this.initialTimer)
@@ -679,6 +692,9 @@ export default {
         this.showNetworkError = false
       }
     },
+    alert(arg) {
+      alert(arg)
+    },
     async addTokenToWallet() {
       const tokenSymbol = 'UNB'
       const tokenDecimals = 18
@@ -694,16 +710,16 @@ export default {
               address: tokenAddress, // The address that the token is at.
               symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
               decimals: tokenDecimals, // The number of decimals in the token
-              image: tokenImage, // A string url of the token logo
-            },
-          },
+              image: tokenImage // A string url of the token logo
+            }
+          }
         })
       } catch (error) {
         alert('Failed to add token')
         console.log(error)
       }
-    },
-  },
+    }
+  }
 }
 </script>
 
