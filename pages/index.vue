@@ -146,7 +146,7 @@
                   </td>
                 </tr> -->
                 <tr>
-                  <th class="font-bold px-3 pt-3">Total Pending UNB</th>
+                  <th class="font-bold px-3 pt-3">Pending UNB</th>
                   <td class="text-[#444444] text-right px-3 pt-3">
                     {{ totalPendingReward.toFixed(2) || '-' }}
                     $UNB
@@ -267,7 +267,7 @@
                         </td>
                       </tr> -->
                       <tr>
-                        <th class="font-bold px-3 pt-3">Total Pending UNB</th>
+                        <th class="font-bold px-3 pt-3">Pending UNB</th>
                         <td class="text-[#444444] text-right px-3 pt-3">
                           {{ totalPendingReward.toFixed(2) || '-' }}
                           $UNB
