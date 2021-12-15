@@ -155,10 +155,7 @@
                 <tr>
                   <th class="font-bold px-3 pt-3 pb-3">Claimed Till Now</th>
                   <td class="text-[#444444] text-right px-3 pt-3 pb-3">
-                    {{
-                      (Number(total) - Number(totalPendingReward)).toFixed(2) ||
-                      '-'
-                    }}
+                    {{ claimed || '-' }}
                     $UNB
                   </td>
                 </tr>
@@ -198,7 +195,7 @@
                   isNaN(pendingRewards) ||
                   pendingRewards <= 0
                     ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                    : 'bg-primary :hover:bg-primary-light'
+                    : 'bg-primary :hover:bg-primary-light',
                 ]"
                 @click="claim"
               >
@@ -220,7 +217,7 @@
             </template>
             <template v-else>
               <div class="mx-auto w-full max-w-md">
-                <div
+                <!-- <div
                   class="flex flex-col border px-3 rounded mb-5 py-3 bg-white"
                 >
                   <p class="text-xs text-gray-400 flex items-center space-x-2">
@@ -232,7 +229,7 @@
                     />
                   </p>
                   <p>{{ vestingCountDown }}</p>
-                </div>
+                </div> -->
                 <div class="rounded overflow-hidden">
                   <div class="flex flex-col items-center justify-center">
                     <div>
@@ -303,10 +300,10 @@
                     </table>
 
                     <div v-if="initialStarts > 0" class="mx-auto max-w-md mt-3">
-                      <div class="flex flex-col px-3 rounded mt-3 bg-white">
-                        <p
-                          class="text-xs text-gray-400 flex items-center space-x-2"
-                        >
+                      <div
+                        class="flex flex-col px-3 rounded mt-3 text-center bg-white"
+                      >
+                        <p class="text-xs text-gray-400 space-x-2">
                           <span class="uppercase"
                             >Initial claim WILL BEGIN IN</span
                           >
@@ -331,7 +328,7 @@
                           :class="[
                             isNaN(initialAmount) || initialAmount <= 0
                               ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                              : 'bg-primary :hover:bg-primary-light'
+                              : 'bg-primary :hover:bg-primary-light',
                           ]"
                           @click="claimInitialRewards"
                         >
@@ -376,11 +373,11 @@
                   </div>
 
                   <div class="w-full mt-3">
-                    <div class="flex flex-col px-3 rounded mt-3 bg-white">
+                    <div
+                      class="flex flex-col text-center px-3 rounded mt-3 bg-white"
+                    >
                       <template v-if="initialStarts > 0">
-                        <p
-                          class="text-xs text-gray-400 flex items-center space-x-2"
-                        >
+                        <p class="text-xs text-gray-400 text-center space-x-2">
                           <span class="uppercase">
                             Initial claim WILL BEGIN IN
                           </span>
@@ -429,7 +426,7 @@ import {
   UNB_ADDRESS_MAP,
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
-  VESTING_CONTRACT_ADDRESS_MAP
+  VESTING_CONTRACT_ADDRESS_MAP,
 } from '~/configs'
 import LOGO from '~/configs/logo'
 // configs
@@ -461,7 +458,7 @@ function countdown(s) {
 
 export default {
   components: {
-    Modal
+    Modal,
   },
   data() {
     return {
@@ -486,7 +483,7 @@ export default {
       isTransactionFailedModalActive: false,
       vestingStarts: 0,
       initialStarts: 0,
-      loading: true
+      loading: true,
     }
   },
   computed: {
@@ -495,7 +492,14 @@ export default {
     },
     initialCountDown() {
       return countdown(this.initialStarts)
-    }
+    },
+    claimed() {
+      const claimed = +this.total - +this.totalPendingReward
+      if (+this.initialAmount === 0) {
+        return (claimed + +this.total * 0.1).toFixed(2)
+      }
+      return claimed.toFixed(2)
+    },
   },
   watch: {
     vestingAddress: {
@@ -505,8 +509,8 @@ export default {
         this.getPendingRewards().finally(() => {
           this.loading = false
         })
-      }
-    }
+      },
+    },
   },
   mounted() {
     if (this.initialTimer) clearInterval(this.initialTimer)
@@ -690,16 +694,16 @@ export default {
               address: tokenAddress, // The address that the token is at.
               symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
               decimals: tokenDecimals, // The number of decimals in the token
-              image: tokenImage // A string url of the token logo
-            }
-          }
+              image: tokenImage, // A string url of the token logo
+            },
+          },
         })
       } catch (error) {
         alert('Failed to add token')
         console.log(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
