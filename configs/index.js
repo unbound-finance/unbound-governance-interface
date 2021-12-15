@@ -35,4 +35,4 @@ export {
 }
 
 // export const INITIAL_START = 1639547820
-export const INITIAL_START = 1639562400 // 14 Dec 2021, 10:00 AM UTC
+export const INITIAL_START = 1639550274 // 14 Dec 2021, 10:00 AM UTC
