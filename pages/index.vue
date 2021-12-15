@@ -60,7 +60,7 @@
           >
         </a>
 
-        <!-- <div class="flex md:order-2 space-x-3 items-center">
+        <div class="flex md:order-2 space-x-3 items-center">
           <button
             v-tooltip="'Add UNB to your MetaMask wallet'"
             style="padding: 6px 6px 6px 9px"
@@ -83,7 +83,7 @@
           >
             Connect Wallet
           </button>
-        </div> -->
+        </div>
       </div>
     </nav>
     <!-- main -->
