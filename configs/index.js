@@ -2,7 +2,7 @@ import UnboundTokenVestingABI from './abis/UnboundTokenVesting'
 
 const VESTING_CONTRACT_ADDRESS = '0xC306f7319712D36577eB30A674c5B9Cf844Afe95'
 
-const SUPPORTED_NETWORK_ID = 4
+const SUPPORTED_NETWORK_ID = 1
 
 const NETWORK_NAME_MAP = {
   1: 'Ethereum Mainnet',
@@ -10,7 +10,7 @@ const NETWORK_NAME_MAP = {
 }
 
 const UNB_ADDRESS_MAP = {
-  1: '',
+  1: '0x8dB253a1943DdDf1AF9bcF8706ac9A0Ce939d922',
   4: '0xb62e7dA37b413E7312055E66261dcEF875Caf0Bb',
 }
 
@@ -32,5 +32,6 @@ export {
   VESTING_CONTRACT_ADDRESS,
 }
 
-// export const INITIAL_START = 1639467420
-export const INITIAL_START = 1639562400 // 14 Dec 2021, 10:00 AM UTC
+export const INITIAL_START = 1639546020
+// export const INITIAL_START = 1639562400 // 14 Dec 2021, 10:00 AM UTC
+

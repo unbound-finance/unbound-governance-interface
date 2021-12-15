@@ -46,6 +46,7 @@
         </div>
       </div>
     </Modal>
+    <!-- Navbar -->
     <nav
       class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800"
     >
@@ -85,48 +86,10 @@
         </div>
       </div>
     </nav>
-    <div class="container mx-auto my-20">
+    <!-- main -->
+    <main class="container mx-auto my-20">
       <div
-        class="rounded-2xl mx-auto w-full max-w-md overflow-hidden shadow-lg bg-white"
-      >
-        <div class="p-10">
-          <div class="space-y-6">
-            <template>
-              <div class="mx-auto w-full max-w-md">
-                <div class="rounded overflow-hidden">
-                  <div class="flex flex-col items-center justify-center">
-                    <div>
-                      <img
-                        src="~/assets/images/logo.svg"
-                        class="animate-coin w-24 h-24 object-contain my-6"
-                      />
-                    </div>
-
-                    <div class="mx-auto max-w-md mt-3">
-                      <div class="flex flex-col px-3 rounded mt-3 bg-white">
-                        <p
-                          class="text-xs text-gray-400 flex items-center space-x-2"
-                        >
-                          <span class="uppercase"
-                            >Initial claim WILL BEGIN IN</span
-                          >
-                        </p>
-                        <p
-                          class="text-2xl font-light text-gray-700 mt-2 tracking-widest font-mono"
-                        >
-                          {{ initialCountDown }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </div>
-        </div>
-      </div>
-
-      <!-- <div
+        v-if="address && +total > 0"
         class="rounded-2xl mx-auto w-full max-w-md overflow-hidden shadow-lg bg-white"
       >
         <div class="p-10">
@@ -263,9 +226,9 @@
                   <p class="text-xs text-gray-400 flex items-center space-x-2">
                     <span>VESTING WILL BEGIN IN</span>
                     <img
+                      v-tooltip="'Including cliff period.'"
                       src="@/assets/images/ic_info.svg"
                       width="12"
-                      v-tooltip="'Including cliff period.'"
                     />
                   </p>
                   <p>{{ vestingCountDown }}</p>
@@ -395,8 +358,56 @@
             </template>
           </div>
         </div>
-      </div> -->
-    </div>
+      </div>
+      <div
+        v-else
+        class="rounded-2xl mx-auto w-full max-w-md overflow-hidden shadow-lg bg-white"
+      >
+        <div class="p-10">
+          <div class="space-y-6">
+            <div class="mx-auto w-full max-w-md">
+              <div class="rounded overflow-hidden">
+                <div class="flex flex-col items-center justify-center">
+                  <div>
+                    <img
+                      src="~/assets/images/logo.svg"
+                      class="animate-coin w-24 h-24 object-contain my-6"
+                    />
+                  </div>
+
+                  <div class="mx-auto max-w-md mt-3">
+                    <div class="flex flex-col px-3 rounded mt-3 bg-white">
+                      <template v-if="initialStarts > 0">
+                        <p
+                          class="text-xs text-gray-400 flex items-center space-x-2"
+                        >
+                          <span class="uppercase">
+                            Initial claim WILL BEGIN IN
+                          </span>
+                        </p>
+                        <p
+                          class="text-2xl font-light text-gray-700 mt-2 tracking-widest font-mono"
+                        >
+                          {{ initialCountDown }}
+                        </p>
+                      </template>
+                      <button
+                        v-else-if="+total > 0"
+                        type="button"
+                        class="text-white mt-3 w-full focus:ring-primary bg-primary hover:!bg-primary-light font-medium rounded text-sm px-5 py-2.5 text-center mr-3 md:mr-0"
+                        @click="connectWallet()"
+                      >
+                        Connect Wallet
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </section>
 </template>
 
@@ -405,9 +416,7 @@ import { providers, Contract } from 'ethers'
 import detectEthereumProvider from '@metamask/detect-provider'
 import dayjs from 'dayjs'
 // components
-import Modal from '../components/Modal.vue'
-
-// configs
+import Modal from '~/components/Modal.vue'
 import {
   INITIAL_START,
   NETWORK_NAME_MAP,
@@ -415,7 +424,9 @@ import {
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
   VESTING_CONTRACT_ADDRESS_MAP
-} from '../configs'
+} from '~/configs'
+import LOGO from '~/configs/logo'
+// configs
 require('@/assets/images/logo.png')
 
 function countdown(s) {
@@ -496,7 +507,7 @@ export default {
     this.initialStarts = INITIAL_START - Math.floor(Date.now() / 1000)
 
     this.initialTimer = setInterval(() => {
-      if (this.initialStarts === 0) return clearInterval(this.initialTimer)
+      if (this.initialStarts <= 0) return clearInterval(this.initialTimer)
 
       this.initialStarts -= 1
     }, 1000)
@@ -573,7 +584,7 @@ export default {
       if (this.vestingTimer) clearInterval(this.vestingTimer)
 
       this.vestingTimer = setInterval(() => {
-        if (this.vestingStarts === 0) {
+        if (this.vestingStarts <= 0) {
           return clearInterval(this.vestingTimer)
         }
         this.vestingStarts -= 1
@@ -661,10 +672,7 @@ export default {
     async addTokenToWallet() {
       const tokenSymbol = 'UNB'
       const tokenDecimals = 18
-      // todo change logo address
-      const tokenImage =
-        window.location.host + require('@/assets/images/logo.png')
-      // 'https://unbound-governance-interface.vercel.app/unb.svg'
+      const tokenImage = LOGO
       const tokenAddress = UNB_ADDRESS_MAP[this.network]
 
       try {
