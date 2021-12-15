@@ -141,27 +141,27 @@
               <table
                 class="bg-gray-100 rounded-xl text-[#828282] p-3 text-left w-full text-xs"
               >
-                <tr>
+                <!-- <tr>
                   <th class="font-bold px-3 pt-3">Total UNB</th>
                   <td class="text-[#444444] text-right px-3 pt-3">
                     {{ Number(total).toFixed(2) || '-' }}
                     $UNB
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
-                  <th class="font-bold px-3 pt-3">Total Pending UNB</th>
+                  <th class="font-bold px-3 pt-3">Pending UNB</th>
                   <td class="text-[#444444] text-right px-3 pt-3">
                     {{ totalPendingReward.toFixed(2) || '-' }}
                     $UNB
                   </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <th class="font-bold px-3 pt-3 pb-3">Claimed Till Now</th>
                   <td class="text-[#444444] text-right px-3 pt-3 pb-3">
                     {{ claimed || '-' }}
                     $UNB
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <th class="font-bold px-3 pb-3">Vesting Ends On:</th>
                   <td class="text-[#444444] text-right px-3 pb-3">
@@ -252,26 +252,31 @@
                       </span>
                       <span>UNB</span>
                     </div>
+                    <div
+                      class="text-center text-xs text-gray-400 mt-1 uppercase"
+                    >
+                      Available to claim
+                    </div>
 
                     <table
                       v-if="initialStarts <= 0"
                       class="bg-gray-100 rounded-xl text-[#828282] mt-3 p-3 text-left w-full text-xs"
                     >
-                      <tr>
+                      <!-- <tr>
                         <th class="font-bold px-3 pt-3">Total UNB</th>
                         <td class="text-[#444444] text-right px-3 pt-3">
                           {{ Number(total).toFixed(2) || '-' }}
                           $UNB
                         </td>
-                      </tr>
+                      </tr> -->
                       <tr>
-                        <th class="font-bold px-3 pt-3">Total Pending UNB</th>
+                        <th class="font-bold px-3 pt-3">Pending UNB</th>
                         <td class="text-[#444444] text-right px-3 pt-3">
                           {{ totalPendingReward.toFixed(2) || '-' }}
                           $UNB
                         </td>
                       </tr>
-                      <tr>
+                      <!-- <tr>
                         <th class="font-bold px-3 pt-3">Claimed Till Now</th>
                         <td class="text-[#444444] text-right px-3 pt-3">
                           {{
@@ -281,7 +286,7 @@
                           }}
                           $UNB
                         </td>
-                      </tr>
+                      </tr> -->
                       <tr>
                         <th class="font-bold px-3 pt-3 pb-3">UNB Address</th>
                         <td class="text-[#444444] text-right px-3 pt-3 pb-3">
@@ -389,6 +394,28 @@
                     <div
                       class="flex flex-col text-center px-3 rounded mt-3 bg-white"
                     >
+                      <div v-if="initialStarts <= 0" class="mb-3">
+                        <label
+                          for="vestingCategory"
+                          class="uppercase text-gray-500 text-xs font-medium mb-3 block"
+                        >
+                          Choose vesting Category
+                        </label>
+                        <select
+                          id="vestingCategory"
+                          v-model="vestingAddress"
+                          :disabled="loading"
+                          class="border-2 px-3 text-sm text-gray-500 py-2 w-full rounded-lg outline-none focus:border-primary"
+                        >
+                          <option
+                            v-for="([name, vAddress], i) in vestingCategory"
+                            :key="name"
+                            :selected="i == 0"
+                            :value="vAddress"
+                            :innerHtml.prop="name"
+                          ></option>
+                        </select>
+                      </div>
                       <template v-if="initialStarts > 0">
                         <p class="text-xs text-gray-400 text-center space-x-2">
                           <span class="uppercase">
