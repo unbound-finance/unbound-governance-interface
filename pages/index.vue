@@ -616,7 +616,7 @@ export default {
       const rewardsPerSecond = amount / (end - this.begin)
       const diff = until - this.begin
 
-      this.totalPendingReward =
+      this.totalPendingReward = this.vestingAddress === VESTING_CONTRACT_ADDRESS_MAP['Friends &amp; Family'] ? (amount / 1e18) :
         (amount - rewardsPerSecond * diff + numerator / denominator) / 1e18
 
       this.end =
