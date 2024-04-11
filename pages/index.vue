@@ -198,7 +198,7 @@
                   isNaN(pendingRewards) ||
                   pendingRewards <= 0
                     ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                    : 'bg-primary :hover:bg-primary-light'
+                    : 'bg-primary :hover:bg-primary-light',
                 ]"
                 @click="claim"
               >
@@ -346,7 +346,7 @@
                           :class="[
                             isNaN(initialAmount) || initialAmount <= 0
                               ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                              : 'bg-primary :hover:bg-primary-light'
+                              : 'bg-primary :hover:bg-primary-light',
                           ]"
                           @click="claimInitialRewards"
                         >
@@ -466,7 +466,7 @@ import {
   UNB_ADDRESS_MAP,
   SUPPORTED_NETWORK_ID,
   UnboundTokenVestingABI,
-  VESTING_CONTRACT_ADDRESS_MAP
+  VESTING_CONTRACT_ADDRESS_MAP,
 } from '~/configs'
 import LOGO from '~/configs/logo'
 // configs
@@ -498,7 +498,7 @@ function countdown(s) {
 
 export default {
   components: {
-    Modal
+    Modal,
   },
   data() {
     return {
@@ -523,7 +523,7 @@ export default {
       isTransactionFailedModalActive: false,
       vestingStarts: 0,
       initialStarts: 0,
-      loading: true
+      loading: true,
     }
   },
   computed: {
@@ -539,7 +539,7 @@ export default {
         return (claimed + +this.total * 0.1).toFixed(2)
       }
       return claimed.toFixed(2)
-    }
+    },
   },
   watch: {
     vestingAddress: {
@@ -549,8 +549,8 @@ export default {
         this.getPendingRewards().finally(() => {
           this.loading = false
         })
-      }
-    }
+      },
+    },
   },
   mounted() {
     if (this.initialTimer) clearInterval(this.initialTimer)
@@ -611,18 +611,38 @@ export default {
       const lastUpdate = vesting.lastUpdate.toString()
       const numerator = amount * (until - lastUpdate)
       const denominator = end - this.begin
-      this.pendingRewards = (numerator / denominator / 1e18).toFixed(2)
+      this.pendingRewards =
+        this.vestingAddress ===
+        VESTING_CONTRACT_ADDRESS_MAP['Friends &amp; Family']
+          ? amount / 1e18
+          : (numerator / denominator / 1e18).toFixed(2)
 
       const rewardsPerSecond = amount / (end - this.begin)
       const diff = until - this.begin
 
-      this.totalPendingReward = this.vestingAddress === VESTING_CONTRACT_ADDRESS_MAP['Friends &amp; Family'] ? (amount / 1e18) :
-        (amount - rewardsPerSecond * diff + numerator / denominator) / 1e18
+      console.log(
+        'vesting',
+        this.vestingAddress ===
+          VESTING_CONTRACT_ADDRESS_MAP['Friends &amp; Family']
+      )
+
+      console.log('amount', amount)
+
+      this.totalPendingReward =
+        this.vestingAddress ===
+        VESTING_CONTRACT_ADDRESS_MAP['Friends &amp; Family']
+          ? amount / 1e18
+          : (amount - rewardsPerSecond * diff + numerator / denominator) / 1e18
 
       this.end =
         end === '0' ? '-' : dayjs.unix(end).format('MMM DD, YYYY - HH:mm')
       this.initialAmount = initialAmount / 1e18
       this.total = amount / 1e18
+
+      if (lastUpdate >= end) {
+        this.pendingRewards = 0
+        this.totalPendingReward = 0
+      }
 
       if (vesting.amount === 0) {
         this.pendingRewards = 0
@@ -737,16 +757,16 @@ export default {
               address: tokenAddress, // The address that the token is at.
               symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
               decimals: tokenDecimals, // The number of decimals in the token
-              image: tokenImage // A string url of the token logo
-            }
-          }
+              image: tokenImage, // A string url of the token logo
+            },
+          },
         })
       } catch (error) {
         alert('Failed to add token')
         console.log(error)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

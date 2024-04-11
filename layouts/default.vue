@@ -5,11 +5,11 @@
 </template>
 
 <script>
-export default {}
+export default {};
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 body {
   background-position: center;
@@ -23,7 +23,7 @@ html {
   height: 100%;
 }
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   height: 100%;
   margin: 0;
   /* background: radial-gradient(#0a646024 #ffffff); */
