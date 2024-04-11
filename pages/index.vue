@@ -634,11 +634,17 @@ export default {
           ? amount / 1e18
           : (amount - rewardsPerSecond * diff + numerator / denominator) / 1e18
 
+      this.pendingRewards = this.totalPendingReward
+
       this.end =
         end === '0' ? '-' : dayjs.unix(end).format('MMM DD, YYYY - HH:mm')
       this.initialAmount = initialAmount / 1e18
       this.total = amount / 1e18
 
+      console.log({
+        lastUpdate,
+        end,
+      })
       if (lastUpdate >= end) {
         this.pendingRewards = 0
         this.totalPendingReward = 0
